@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Lite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fafafa;
+            color: #262626;
+        }
+
+        nav {
+            background-color: #ffffff;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav .nav-inner {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+        }
+
+        nav .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #262626;
+            text-decoration: none;
+        }
+
+        nav .nav-links a {
+            margin-left: 16px;
+            text-decoration: none;
+            color: #262626;
+            font-size: 14px;
+        }
+
+        nav .nav-links a:hover {
+            color: #0095f6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        .messages {
+            margin-bottom: 16px;
+        }
+
+        .messages p {
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .messages p.error {
+            background-color: #ffe0e0;
+            color: #cc0000;
+        }
+
+        .messages p.success {
+            background-color: #e0ffe0;
+            color: #007700;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="/" class="logo">Instagram Lite</a>
+        <div class="nav-links">
+            {% if request.user.is_authenticated %}
+                <a href="/">Home</a>
+                <a href="/create-post/">+ Post</a>
+                <a href="/logout/">Logout</a>
+            {% else %}
+                <a href="/login/">Login</a>
+                <a href="/register/">Register</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+</body>
+</html>
