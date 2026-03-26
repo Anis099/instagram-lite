@@ -2,83 +2,74 @@
 
 {% block content %}
 
-{% if posts %}
-    {% for post in posts %}
-    <div style="background: #fff; border: 1px solid #dbdbdb; border-radius: 8px; margin-bottom: 24px;">
+{% for post in posts %}
+<div style="background: #fff; border: 1px solid #dbdbdb; border-radius: 8px; margin-bottom: 24px;">
 
-        <!-- Post Header -->
-        <div style="padding: 14px 16px; display: flex; align-items: center;">
-            <div style="width: 36px; height: 36px; border-radius: 50%; background-color: #dbdbdb; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; margin-right: 12px;">
-                {{ post.author.username|first|upper }}
-            </div>
-            <span style="font-weight: bold; font-size: 14px;">{{ post.author.username }}</span>
+    <!-- Post Header -->
+    <div style="padding: 14px 16px; display: flex; align-items: center;">
+        <div style="width: 36px; height: 36px; border-radius: 50%; background-color: #dbdbdb; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; margin-right: 12px;">
+            {{ post.author.username|first|upper }}
         </div>
+        <span style="font-weight: bold; font-size: 14px;">{{ post.author.username }}</span>
+    </div>
 
-        <!-- Post Image -->
-        <img src="{{ post.image.url }}" alt="post image"
-            style="width: 100%; display: block; max-height: 500px; object-fit: cover;">
+    <!-- Post Image -->
+    <img src="{{ post.image.url }}" alt="post image"
+        style="width: 100%; display: block; max-height: 500px; object-fit: cover;">
 
-        <!-- Likes and Comments Count -->
-        <div style="padding: 12px 16px 4px 16px;">
-            <span style="font-size: 14px; font-weight: bold;">{{ post.like_set.count }} likes</span>
-        </div>
+    <!-- Likes -->
+    <div style="padding: 12px 16px 4px 16px;">
+        <span style="font-size: 14px; font-weight: bold;">{{ post.like_set.count }} likes</span>
+    </div>
 
-        <!-- Caption -->
-        {% if post.caption %}
-        <div style="padding: 4px 16px;">
-            <span style="font-size: 14px;"><strong>{{ post.author.username }}</strong> {{ post.caption }}</span>
-        </div>
-        {% endif %}
+    <!-- Caption -->
+    {% if post.caption %}
+    <div style="padding: 4px 16px;">
+        <span style="font-size: 14px;"><strong>{{ post.author.username }}</strong> {{ post.caption }}</span>
+    </div>
+    {% endif %}
 
-        <!-- Comments -->
-        {% if post.comment_set.all %}
-        <div style="padding: 4px 16px;">
-            {% for comment in post.comment_set.all %}
-            <div style="font-size: 14px; margin-bottom: 4px;">
-                <strong>{{ comment.author.username }}</strong> {{ comment.text }}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <!-- Like Button -->
-     <!-- Like Button -->
-        <!-- Like Button -->
-        <div style="padding: 8px 16px 4px 16px;">
-            <form method="POST" action="{% url 'like_post' post.id %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit"
-                    style="background: none; border: none; cursor: pointer; font-size: 22px; padding: 0;">
-                    {% if post.id in liked_posts %}
-                        ❤️
-                    {% else %}
-                        🤍
-                    {% endif %}
-                </button>
-            </form>
-        </div>
-        
-        <!-- Comment Form -->
-        <div style="padding: 8px 16px 16px 16px; border-top: 1px solid #efefef; margin-top: 8px; display: flex; gap: 8px;">
-            <form method="POST" action="{% url 'add_comment' post.id %}" style="display: flex; width: 100%; gap: 8px;">
-                {% csrf_token %}
-                <input type="text" name="text" placeholder="Add a comment..."
-                    style="flex: 1; border: none; outline: none; font-size: 14px;">
-                <button type="submit"
-                    style="background: none; border: none; color: #0095f6; font-weight: bold; font-size: 14px; cursor: pointer;">
-                    Post
-                </button>
-            </form>
-        </div>
-
+    <!-- Comments -->
+    {% for comment in post.comment_set.all %}
+    <div style="padding: 4px 16px; font-size: 14px; margin-bottom: 4px;">
+        <strong>{{ comment.author.username }}</strong> {{ comment.text }}
     </div>
     {% endfor %}
 
-{% else %}
-    <div style="text-align: center; padding: 60px 0; color: #8e8e8e;">
-        <p style="font-size: 18px;">No posts yet.</p>
-        <p style="font-size: 14px; margin-top: 8px;">Be the first to <a href="/create-post/" style="color: #0095f6;">share a post</a>!</p>
+    <!-- Like Button -->
+    <div style="padding: 8px 16px 4px 16px;">
+        <form method="POST" action="{% url 'like_post' post.id %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit"
+                style="background: none; border: none; cursor: pointer; font-size: 22px; padding: 0;">
+                {% if post.id in liked_posts %}
+                    ❤️
+                {% else %}
+                    🤍
+                {% endif %}
+            </button>
+        </form>
     </div>
-{% endif %}
+
+    <!-- Comment Form -->
+    <div style="padding: 8px 16px 16px 16px; border-top: 1px solid #efefef; margin-top: 8px; display: flex; gap: 8px;">
+        <form method="POST" action="{% url 'add_comment' post.id %}" style="display: flex; width: 100%; gap: 8px;">
+            {% csrf_token %}
+            <input type="text" name="text" placeholder="Add a comment..."
+                style="flex: 1; border: none; outline: none; font-size: 14px;">
+            <button type="submit"
+                style="background: none; border: none; color: #0095f6; font-weight: bold; font-size: 14px; cursor: pointer;">
+                Post
+            </button>
+        </form>
+    </div>
+
+</div>
+{% empty %}
+<div style="text-align: center; padding: 60px 0; color: #8e8e8e;">
+    <p style="font-size: 18px;">No posts yet.</p>
+    <p style="font-size: 14px; margin-top: 8px;">Be the first to <a href="/create-post/" style="color: #0095f6;">share a post</a>!</p>
+</div>
+{% endfor %}
 
 {% endblock %}
